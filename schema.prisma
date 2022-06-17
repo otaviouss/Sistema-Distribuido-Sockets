@@ -31,8 +31,6 @@ model Usuario {
   nome     String
   senha    String
   vouchers Voucher[]
-  TrocaP   Troca[]   @relation("proponente")
-  TrocaR   Troca[]   @relation("recebedor")
 }
 
 model Troca {
@@ -41,9 +39,5 @@ model Troca {
   voucher1_id Int     @unique
   v2          Voucher @relation(fields: [voucher2_id], references: [id], name: "v_usuario2")
   voucher2_id Int     @unique
-  usuario1    Usuario @relation(fields: [usuario1_id], references: [id], name: "proponente")
-  usuario1_id Int     @unique
-  usuario2    Usuario @relation(fields: [usuario2_id], references: [id], name: "recebedor")
-  usuario2_id Int     @unique
   status      Int
 }
