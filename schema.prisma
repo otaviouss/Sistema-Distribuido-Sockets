@@ -36,8 +36,8 @@ model Usuario {
 model Troca {
   id          Int     @id @default(autoincrement())
   v1          Voucher @relation(fields: [voucher1_id], references: [id], name: "v_usuario1")
-  voucher1_id Int     @unique
+  voucher1_id Int
   v2          Voucher @relation(fields: [voucher2_id], references: [id], name: "v_usuario2")
-  voucher2_id Int     @unique
+  voucher2_id Int
   status      Int
 }
