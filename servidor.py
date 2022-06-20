@@ -1,8 +1,8 @@
+import json
 import socket
-from bd import banco
-
-from _thread import *
 import asyncio
+
+from bd import banco
 
 class Servidor():
 
@@ -10,7 +10,22 @@ class Servidor():
         pass
 
     async def cadastrarCliente(email, nome, senha):
-        await banco.inserir_usuario(email, nome, senha)
+        try:
+            await banco.inserir_usuario(email, nome, senha)
+            return 1
+        except:
+            return 0
+    
+    async def checarCliente(email, senha):
+        try:
+            user = await banco.ver_usuario(email, senha)
+
+            if user is None:
+                return 0
+             
+            return 1
+        except:
+            return 0
 
     async def cadastrarVoucher(titulo, descricao, gato, local, lanche, duracao, imagem, titular_id):
         await banco.inserir_voucher(titulo, descricao, gato, local, lanche, duracao, imagem, int(titular_id))
@@ -19,10 +34,14 @@ class Servidor():
         await banco.nova_Troca(int(id_voucher1), int(id_voucher2))
 
     async def realizarTroca(id_troca):
-        await banco.alterar_Status_Troca_Aceito(int(id_troca))
+        try:
+            await banco.alterar_Status_Troca_Aceito(int(id_troca))
+            return 1
+        except:
+            return 0
 
     async def negarTroca(id_troca):
-        banco.alterar_Status_Troca_Rejeitado(int(id_troca))
+        await banco.alterar_Status_Troca_Rejeitado(int(id_troca))
 
     async def apresentarVouchers():
         await banco.ver_vouchers()
@@ -33,7 +52,7 @@ def main():
     print ("Socket successfully created")
 
     # reserve a port on your computer
-    port = 7777		
+    port = 7777
 
     # Next bind to the port
     # we have not typed any ip in the ip field
@@ -55,23 +74,28 @@ def main():
         c, addr = s.accept()	
         print ('Got connection from', addr )
 
-        op = c.recv(1024).decode().split(":")
+        res = ''
+        dados = c.recv(1024).decode()
 
-        if(op[0]=="CC"):
-            asyncio.run(Servidor.cadastrarCliente(op[1], op[2], op[3]))
-        elif(op[0]=="CV"):
-            asyncio.run(Servidor.cadastrarVoucher(op[1],op[2],op[3],op[4],op[5],op[6],op[7], op[8]))
-        elif(op[0]=="PT"):
-            asyncio.run(Servidor.proporTroca(op[1],op[2]))
-        elif(op[0]=="RT"):
-            asyncio.run(Servidor.realizarTroca(op[1],))
-        elif(op[0]=="NT"):
-            asyncio.run(Servidor.negarTroca(op[1],))
-        elif(op[0]=="AV"):
+        file = json.loads(dados)
+
+        if(file["op"]=="CC"):
+            asyncio.run(Servidor.cadastrarCliente(file["email"], file["nome"], file["senha"]))
+        elif(file["op"]=="CV"):
+            asyncio.run(Servidor.cadastrarVoucher(file["titulo"], file["descricao"], file["gato"], file["local"], file["lanche"], file["duracao"], file["imagem"], file["titular_id"]))
+        elif(file["op"]=="PT"):
+            asyncio.run(Servidor.proporTroca(file["id_voucher1"], file["id_voucher2"]))
+        elif(file["op"]=="RT"):
+            asyncio.run(Servidor.realizarTroca(file["id_troca"],))
+        elif(file["op"]=="NT"):
+            asyncio.run(Servidor.negarTroca(file["id_troca"],))
+        elif(file["op"]=="AV"):
             asyncio.run(Servidor.apresentarVouchers())
+        elif(file["op"]=="FL"):
+            res = asyncio.run(Servidor.checarCliente(file["email"], file["senha"]))
 
         # send a thank you message to the client. encoding to send byte type.
-        c.send('Thank you for connecting'.encode())
+        c.send(str(res).encode())
 
         # Close the connection with the client
         c.close()

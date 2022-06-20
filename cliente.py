@@ -1,3 +1,4 @@
+import json
 import socket
 
 class Cliente():
@@ -16,78 +17,82 @@ class Cliente():
     def solicitarCriarUsuario(self, email, nome, senha):
         s = self.conectar()
 
-        s.sendall("CC:".encode())
-        s.sendall(email.encode())
-        s.sendall(":".encode())
-        s.sendall(nome.encode())
-        s.sendall(":".encode())
-        s.sendall(senha.encode())
+        file = json.dumps({"op": "CC", "email": email, "nome": nome, "senha": senha})
+
+        s.sendall(file.encode())
+
+        s.close()
+
+    def realizarLogin(self, email, senha):
+        s = self.conectar()
+
+        file = json.dumps({"op": "FL", "email": email, "senha": senha})
+
+        s.sendall(file.encode())
+
+        dados = s.recv(1024).decode()
+        print(dados)
+        if(dados=="1"): print("Sucesso!")
+        else:         print("Falha!")
 
         s.close()
 
     def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao, imagem, titular_id):
         s = self.conectar()
 
-        s.sendall("CV:".encode())
-        s.sendall(titulo.encode())
-        s.sendall(":".encode())
-        s.sendall(descricao.encode())
-        s.sendall(":".encode())
-        s.sendall(gato.encode())
-        s.sendall(":".encode())
-        s.sendall(local.encode())
-        s.sendall(":".encode())
-        s.sendall(lanche.encode())
-        s.sendall(":".encode())
-        s.sendall(duracao.encode())
-        s.sendall(":".encode())
-        s.sendall(imagem.encode())
-        s.sendall(":".encode())
-        s.sendall(titular_id.encode())
+        file = json.dumps({"op": "CV", "titulo": titulo, "descricao": descricao,
+                            "gato": gato, "local": local, "lanche": lanche,
+                            "duracao": duracao, "imagem": imagem, "titular_id": titular_id})
+
+        s.sendall(file.encode())
 
         s.close()
 
     def proporTroca(self, id_voucher1, id_voucher2):
         s = self.conectar()
 
-        s.sendall("PT:".encode())
-        s.sendall(id_voucher1.encode())
-        s.sendall(":".encode())
-        s.sendall(id_voucher2.encode())
+        file = json.dumps({"op": "PT", "id_voucher1": id_voucher1, "id_voucher2": id_voucher2})
+        
+        s.sendall(file.encode())
 
         s.close()
 
     def realizarTroca(self, id_troca):
         s = self.conectar()
 
-        s.sendall("RT:".encode())
-        s.sendall(id_troca.encode())
+        file = json.dumps({"op": "RT", "id_troca": id_troca})
+
+        s.sendall(file.encode())
 
         s.close()
 
     def negarTroca(self, id_troca):
         s = self.conectar()
 
-        s.sendall("NT:".encode())
-        s.sendall(id_troca.encode())
+        file = json.dumps({"op": "NT", "id_troca": id_troca})
+
+        s.sendall(file.encode())
 
         s.close()
 
     def apresentarVouchers(self):
         s = self.conectar()
+        
+        file = json.dumps({"op": "AV"})
 
-        s.sendall("AV".encode())
+        s.sendall(file.encode())
 
         s.close()
 
 def main():
     c = Cliente()
-    c.solicitarCriarUsuario(email="gm", nome="AAA", senha="123")	
-    c.cadastrarVoucher(titulo="TI", descricao="DS", gato="GT", local="LC", lanche="LA", duracao="DU", imagem="IM", titular_id="1")
-    c.proporTroca(id_voucher1="2", id_voucher2="4")
-    c.realizarTroca(id_troca="1")
-    c.negarTroca(id_troca="2")
-    c.apresentarVouchers()
+    #c.solicitarCriarUsuario(email="test", nome="AAA", senha="123")	
+    #c.cadastrarVoucher(titulo="hahah", descricao="hehehe", gato="GT", local="LC", lanche="LA", duracao="DU", imagem="IM", titular_id="1")
+    #c.proporTroca(id_voucher1="2", id_voucher2="4")
+    #c.realizarTroca(id_troca="1")
+    #c.negarTroca(id_troca="2")
+    #c.apresentarVouchers()
+    c.realizarLogin("lsls", "123")
 
 if __name__ == '__main__':
     main()

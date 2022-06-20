@@ -1,4 +1,5 @@
 import asyncio
+
 from datetime import datetime
 from prisma import Prisma
 
@@ -19,6 +20,21 @@ class banco():
         await prisma.disconnect()
 
         return user.id
+    
+    async def ver_usuario(email, senha) -> None:
+        prisma = Prisma()
+        await prisma.connect()
+
+        user = await prisma.usuario.find_first(
+            where={
+                'email': email,
+                'senha': senha,
+            }
+        )
+
+        await prisma.disconnect()
+
+        return user
     
     async def ver_usuarios() -> None:
         prisma = Prisma()
