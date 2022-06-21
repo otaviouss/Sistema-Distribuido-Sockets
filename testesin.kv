@@ -1,0 +1,40 @@
+#:kivy 2.1.0
+<Login>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        Label:
+            id: Jovem
+            text: 'Sistema'
+            font_size: 45
+            size_hint: 1, None  
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            TextInput:
+                id: OK
+                multiline: False
+                size_hint: 1, 0.5
+                
+
+            TextInput:
+                id: not_OK
+                multiline: False
+                size_hint: 1, 0.5
+
+            
+        Button:
+            id: loucura
+            text: 'Sorry'
+            background_color: 1, 1, 0, 1
+            #on_press: root.manager.current = 'telatrocas'
+            on_press: root.VerificarLogin(root.Clicou())
+            size_hint: 1, 0.5
+
+<TelaTrocas>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        Label:
+            text: 'kinda worked'
