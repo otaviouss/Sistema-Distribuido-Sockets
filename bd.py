@@ -41,7 +41,6 @@ class banco():
         await prisma.connect()
 
         users = await prisma.usuario.find_many()
-        print(users)
 
         await prisma.disconnect()
 
@@ -71,9 +70,24 @@ class banco():
         await prisma.connect()
 
         vouchers = await prisma.voucher.find_many()
-        print(vouchers)
 
         await prisma.disconnect()
+
+        return vouchers
+
+    async def ver_vouchers_usuario(id_usuario) -> None:
+        prisma = Prisma()
+        await prisma.connect()
+
+        vouchers = await prisma.voucher.find_many(
+            where={
+                'titular_id': id_usuario,
+            }
+        )
+
+        await prisma.disconnect()
+
+        return vouchers
     
     async def alterar_Titular_Voucher(id, novo_titular_id) -> None:
         prisma = Prisma()
@@ -111,9 +125,10 @@ class banco():
         await prisma.connect()
 
         trocas = await prisma.troca.find_many()
-        print(trocas)
 
         await prisma.disconnect()
+
+        return(trocas)
 
     async def alterar_Status_Troca_Aceito(id) -> None:
         prisma = Prisma()
@@ -144,6 +159,20 @@ class banco():
         )
 
         await prisma.disconnect()
+    
+    async def id_usuario_by_email(email) -> None:
+        prisma = Prisma()
+        await prisma.connect()
+
+        user = await prisma.usuario.find_first(
+            where={
+                'email': email,
+            }
+        )
+
+        await prisma.disconnect()
+
+        return user.id
     
 
 if __name__ == '__main__':
