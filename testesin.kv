@@ -1,13 +1,42 @@
 #:kivy 2.1.0
+
+<LabelLogin@Label>:
+    canvas.before:
+        Color:
+            rgba: 220/255, 220/255, 220/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
 <Login>:
+
     BoxLayout:
         orientation: 'vertical'
-
-        Label:
+        padding: 50
+        spacing: 20
+        LabelLogin:
             id: Jovem
             text: 'Sistema'
             font_size: 45
             size_hint: 1, None  
+
+        BoxLayout:
+            orientation: 'horizontal'
+
+            LabelLogin:
+                text: 'Email'
+                size_hint: (0.4, 0.2)
+                pos_hint: {'center_x': 0.5}
+
+            Label:
+                text: ''
+                size_hint: 0.1, 0
+
+
+            LabelLogin:
+                text: 'Senha'
+                size_hint: (0.4, 0.2)
+                pos_hint: {'center_x': 0.5}
 
         BoxLayout:
             orientation: 'horizontal'
@@ -17,7 +46,10 @@
                 multiline: False
                 size_hint: 1, 0.5
                 
-
+            Label:
+                text: ''
+                size_hint: 0.1, 0
+            
             TextInput:
                 id: not_OK
                 multiline: False
@@ -26,15 +58,95 @@
             
         Button:
             id: loucura
-            text: 'Sorry'
+            text: 'Entrar'
             background_color: 1, 1, 0, 1
-            #on_press: root.manager.current = 'telatrocas'
             on_press: root.VerificarLogin(root.Clicou())
-            size_hint: 1, 0.5
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.5, 0.5)
 
-<TelaTrocas>:
+
+
+<TelaMenu>:
+
+
+    Label:
+        text: 'Menu'
+    GridLayout:
+        cols: 2
+
+        Button:
+            text: 'Vouchers'
+        Button:
+            text: 'Cadastrar Voucher'
+            on_press: root.IrParaCadastro()
+        Button:
+            text: 'Meus Vouchers'
+        Button:
+            text: 'Trocas'
+
+
+
+
+
+
+
+# --
+<LabelCadastro@Label>:
+    font_size: 15
+    #size_hint: None, None  
+
+    canvas.before:
+        Color:
+            rgba: 220/255, 220/255, 220/255, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size    
+
+# --
+<InputCadastro@TextInput>:
+    multiline: False
+    #size_hint: None, None
+# --
+<TelaCadastro>:
     BoxLayout:
+        padding: 50
+        spacing: 20
         orientation: 'vertical'
+        LabelCadastro:
+            text: 'Cadastrar Voucher'
+            size_hint: 1, 0.5
+        GridLayout:
+            cols: 2
+            
+            padding: 25
 
-        Label:
-            text: 'kinda worked'
+            LabelCadastro:
+                text: 'Gato'
+            InputCadastro:
+                id: gato
+
+            LabelCadastro:
+                text: 'Título'
+            InputCadastro:
+                id: titulo
+
+            LabelCadastro:
+                text: 'Descrição'
+            InputCadastro:
+                id: descricao
+
+            LabelCadastro:
+                text: 'Local'
+            InputCadastro:
+                id: local
+
+            LabelCadastro:
+                text: 'Lanche'
+            InputCadastro:
+                id: lanche
+
+        Button:
+            text: 'Cadastrar'
+            pos_hint: {'center_x': 0.5}
+            size_hint: (0.5, 0.2)
+            on_press: root.CadastrarVoucher()
