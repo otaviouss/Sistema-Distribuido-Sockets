@@ -1,6 +1,5 @@
 import json
 import socket
-import zlib
 
 class Cliente():
 
@@ -40,8 +39,8 @@ class Cliente():
 
         dados = self.s.recv(1024).decode()
 
-        if(dados=="1"):
-            self.user = email
+        if(dados!="0"):
+            self.user_id = int(dados)
             print("Sucesso!")
             self.desconectar()
             return 1
@@ -50,12 +49,12 @@ class Cliente():
             self.desconectar()
             return 0
 
-    def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao, imagem, titular_id):
+    def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao):
         self.s = self.conectar()
 
         file = json.dumps({"op": "CV", "titulo": titulo, "descricao": descricao,
                             "gato": gato, "local": local, "lanche": lanche,
-                            "duracao": duracao, "imagem": imagem, "titular_id": titular_id})
+                            "duracao": duracao, "titular_id": self.user_id})
 
         self.s.sendall(file.encode())
 

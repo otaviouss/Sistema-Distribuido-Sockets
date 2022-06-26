@@ -1,6 +1,5 @@
 import asyncio
 
-from datetime import datetime
 from prisma import Prisma
 
 class banco():
@@ -55,7 +54,7 @@ class banco():
                 'gato': gato,
                 'local': local,
                 'lanche': lanche,
-                'duracao': datetime.now(),
+                'duracao': duracao,
                 'imagem': imagem,
                 'titular_id': titular_id,
             }

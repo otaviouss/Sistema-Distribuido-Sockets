@@ -17,7 +17,7 @@ model Voucher {
   gato       String
   local      String
   lanche     String
-  duracao    DateTime
+  duracao    Int
   imagem     String
   titular    Usuario? @relation(fields: [titular_id], references: [id])
   titular_id Int?

@@ -1,10 +1,9 @@
 import json
 import socket
 import asyncio
-from _thread import *
-import zlib
 
 from bd import banco
+from _thread import *
 
 class Servidor():
 
@@ -35,16 +34,17 @@ class Servidor():
                 c.sendall("0".encode())
                 return 0
 
-            c.sendall("1".encode())
+            c.sendall(str(user.id).encode())
             c.close()
         except:
             c.sendall("0".encode())
             c.close()
 
-    def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao, imagem, titular_id, c):
+    def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao, titular_id, c):
+        imagem = ""
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        loop.run_until_complete(banco.inserir_voucher(titulo, descricao, gato, local, lanche, duracao, imagem, int(titular_id)))
+        loop.run_until_complete(banco.inserir_voucher(titulo, descricao, gato, local, lanche, int(duracao), imagem, int(titular_id)))
         loop.close()
         c.close()
 
@@ -138,7 +138,7 @@ def main():
         elif(file["op"]=="FL"):
             start_new_thread(s.checarCliente, (file["email"], file["senha"], c))
         elif(file["op"]=="CV"):
-            start_new_thread(s.cadastrarVoucher, (file["titulo"], file["descricao"], file["gato"], file["local"], file["lanche"], file["duracao"], file["imagem"], file["titular_id"], c))
+            start_new_thread(s.cadastrarVoucher, (file["titulo"], file["descricao"], file["gato"], file["local"], file["lanche"], file["duracao"], file["titular_id"], c))
         elif(file["op"]=="PT"):
             start_new_thread(s.proporTroca, (file["id_voucher1"], file["id_voucher2"], c))
         elif(file["op"]=="RT"):

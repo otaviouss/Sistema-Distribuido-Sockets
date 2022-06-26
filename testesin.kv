@@ -3,20 +3,21 @@
 <LabelLogin@Label>:
     canvas.before:
         Color:
-            rgba: 220/255, 220/255, 220/255, 1
+            rgba: 255, 255, 255, 0
         Rectangle:
             pos: self.pos
             size: self.size
 
 <Login>:
-
     BoxLayout:
         orientation: 'vertical'
         padding: 50
         spacing: 20
         LabelLogin:
             id: Jovem
-            text: 'Sistema'
+            text: 'TROCAT'
+            color: 0,0,0,1
+            bold: 1
             font_size: 45
             size_hint: 1, None  
 
@@ -25,6 +26,9 @@
 
             LabelLogin:
                 text: 'Email'
+                color: 0,0,0,1
+                bold: 1
+                font_size: 20
                 size_hint: (0.4, 0.2)
                 pos_hint: {'center_x': 0.5}
 
@@ -35,6 +39,9 @@
 
             LabelLogin:
                 text: 'Senha'
+                color: 0,0,0,1
+                bold: 1
+                font_size: 20
                 size_hint: (0.4, 0.2)
                 pos_hint: {'center_x': 0.5}
 
@@ -60,15 +67,13 @@
             id: loucura
             text: 'Entrar'
             background_color: 1, 1, 0, 1
-            on_press: root.VerificarLogin(root.Clicou())
+            on_press: root.Clicou()
             pos_hint: {'center_x': 0.5}
             size_hint: (0.5, 0.5)
 
 
 
 <TelaMenu>:
-
-
     Label:
         text: 'Menu'
     GridLayout:
@@ -76,28 +81,31 @@
 
         Button:
             text: 'Vouchers'
+            bold: 1
+            font_size: 20
         Button:
             text: 'Cadastrar Voucher'
+            bold: 1
+            font_size: 20
             on_press: root.IrParaCadastro()
         Button:
             text: 'Meus Vouchers'
+            bold: 1
+            font_size: 20
         Button:
             text: 'Trocas'
-
-
-
-
+            bold: 1
+            font_size: 20
 
 
 
 # --
 <LabelCadastro@Label>:
-    font_size: 15
     #size_hint: None, None  
 
     canvas.before:
         Color:
-            rgba: 220/255, 220/255, 220/255, 1
+            rgba: 255, 255, 255, 0
         Rectangle:
             pos: self.pos
             size: self.size    
@@ -110,43 +118,76 @@
 <TelaCadastro>:
     BoxLayout:
         padding: 50
-        spacing: 20
+        spacing: 10
         orientation: 'vertical'
+
         LabelCadastro:
+            id: cad
             text: 'Cadastrar Voucher'
+            font_size: 40
+            color: 0,0,0,1
+            bold: 1
             size_hint: 1, 0.5
+
         GridLayout:
             cols: 2
-            
-            padding: 25
+            padding: 10
 
             LabelCadastro:
-                text: 'Gato'
-            InputCadastro:
-                id: gato
-
-            LabelCadastro:
-                text: 'Título'
+                text: 'Título:'
+                color: 0,0,0,1
+                bold: 1
             InputCadastro:
                 id: titulo
 
             LabelCadastro:
-                text: 'Descrição'
+                text: 'Descrição:'
+                color: 0,0,0,1
+                bold: 1
             InputCadastro:
                 id: descricao
 
             LabelCadastro:
-                text: 'Local'
+                text: 'Gato:'
+                color: 0,0,0,1
+                bold: 1
+            InputCadastro:
+                id: gato
+
+            LabelCadastro:
+                text: 'Local:'
+                color: 0,0,0,1
+                bold: 1
             InputCadastro:
                 id: local
 
             LabelCadastro:
-                text: 'Lanche'
+                text: 'Lanche:'
+                color: 0,0,0,1
+                bold: 1
             InputCadastro:
                 id: lanche
 
-        Button:
-            text: 'Cadastrar'
-            pos_hint: {'center_x': 0.5}
-            size_hint: (0.5, 0.2)
-            on_press: root.CadastrarVoucher()
+            LabelCadastro:
+                text: 'Duração:'
+                color: 0,0,0,1
+                bold: 1
+            InputCadastro:
+                id: duracao
+
+        GridLayout:
+            cols: 2
+            padding: 70
+            
+            Button:
+                text: 'Voltar'
+                pos_hint: {'center_x': 0.5}
+                size_hint: (0.5, 0.5)
+                on_press: root.IrParaMenu()
+
+            Button:
+                text: 'Cadastrar'
+                background_color: 1, 1, 0, 1
+                pos_hint: {'center_x': 0.5}
+                size_hint: (0.5, 0.5)
+                on_press: root.CadastrarVoucher()
