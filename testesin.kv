@@ -83,6 +83,7 @@
             text: 'Vouchers'
             bold: 1
             font_size: 20
+            on_press: root.IrParaVouchers()
         Button:
             text: 'Cadastrar Voucher'
             bold: 1
@@ -92,10 +93,12 @@
             text: 'Meus Vouchers'
             bold: 1
             font_size: 20
+            on_press: root.IrParaMeusVouchers()
         Button:
             text: 'Trocas'
             bold: 1
             font_size: 20
+            on_press: root.IrParaTrocas()
 
 
 
@@ -191,3 +194,115 @@
                 pos_hint: {'center_x': 0.5}
                 size_hint: (0.5, 0.5)
                 on_press: root.CadastrarVoucher()
+
+<Voucher>:
+    canvas.before:
+        Color:
+            rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    LabelCadastro:
+        text: root.label_titulo
+    LabelCadastro:
+        text: root.label_descricao
+    LabelCadastro:
+        text: root.label_nome_gato
+    LabelCadastro:
+        text: root.label_local
+    LabelCadastro:
+        text: root.label_lanche
+    LabelCadastro:
+        text: root.label_duracao
+
+
+<TelaMeusVouchers>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 20
+        LabelLogin:
+            text: 'Meus Vouchers'
+            color: 0,0,0,1
+            bold: 1
+            font_size: 45
+            size_hint: 1, None
+        Button:
+            text: 'Retornar menu'
+            on_press: root.IrParaMenu()
+        RV:
+            id: joia
+            viewclass: 'Voucher'  # defines the viewtype for the data items.
+            orientation: "horizontal"
+            data: self.rv_data_list
+            spacing: 80
+            padding:50, 50
+            space_x: self.size[0]/3
+            SelectableRecycleGridLayout:
+                cols: 3
+                size_hint: 1, None
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                height: self.minimum_height
+                width: self.minimum_width
+        
+<TelaVouchers>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 50
+        spacing: 20
+        LabelLogin:
+            text: 'Vouchers'
+            color: 0,0,0,1
+            bold: 1
+            font_size: 45
+            size_hint: 1, None
+        Button:
+            text: 'Retornar menu'
+            on_press: root.IrParaMenu()
+        RV:
+            id: joia
+            viewclass: 'Voucher'  # defines the viewtype for the data items.
+            orientation: "horizontal"
+            data: self.rv_data_list
+            spacing: 80
+            padding:50, 50
+            space_x: self.size[0]/3
+            SelectableRecycleGridLayout:
+                cols: 3
+                size_hint: 1, None
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                height: self.minimum_height
+                width: self.minimum_width
+        Button:
+            text: 'Ampliar visualização'
+            on_press: root.IrParaMenu()
+
+
+<ComponenteTroca>:
+    orientation: 'vertical'
+    LabelLogin:
+        text: 'Titulo'#root.label_titulo
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        #Voucher:
+
+        #Voucher:
+
+    LabelLogin:
+        text: 'Aceitar?'
+    BoxLayout:
+        orientation: 'horizontal'
+        Button:
+            text: 'S'
+        Button:
+            text: 'N'
+
+<TelaTrocas>:
+    BoxLayout:
+        orientation: 'horizontal'
+        ComponenteTroca:
