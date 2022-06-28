@@ -68,7 +68,13 @@ class banco():
         prisma = Prisma()
         await prisma.connect()
 
-        vouchers = await prisma.voucher.find_many()
+        vouchers = await prisma.voucher.find_many(
+            include={
+                'titular': True,
+                'Troca1': True,
+                'Troca2': True,
+            }
+        )
 
         await prisma.disconnect()
 

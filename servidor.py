@@ -93,7 +93,23 @@ class Servidor():
         vouchers = loop.run_until_complete(banco.ver_vouchers())
         loop.close()
 
-        file = json.dumps(str(vouchers))
+        v = {}
+        for i in range(len(vouchers)):
+            v[i] = {
+                "id":vouchers[i].id,
+                "titulo":vouchers[i].titulo,
+                "descricao":vouchers[i].descricao,
+                "gato":vouchers[i].gato,
+                "local":vouchers[i].local,
+                "lanche":vouchers[i].lanche,
+                "duracao":vouchers[i].duracao,
+                "imagem":vouchers[i].imagem,
+                "titular_id":vouchers[i].titular_id,
+            }
+
+        print(v)
+
+        file = json.dumps(v)
 
         c.sendall(file.encode())
 

@@ -100,6 +100,8 @@ class Cliente():
 
         self.desconectar()
 
+        return json.loads(dados)
+
     def apresentarVouchers(self):
         self.s = self.conectar()
         
@@ -112,6 +114,8 @@ class Cliente():
         print("V: ", json.loads(dados))
 
         self.desconectar()
+
+        return json.loads(dados)
     
     def desconectar(self):
         self.s.close()
@@ -119,12 +123,12 @@ class Cliente():
 def main():
     c = Cliente()
     #c.solicitarCriarUsuario(email="teste", nome="AAA", senha="123")	
-    c.realizarLogin("test", "123")
+    c.realizarLogin("marta@gmail.com", "12345")
     #c.cadastrarVoucher(titulo="hahah", descricao="hehehe", gato="GT", local="LC", lanche="LA", duracao="DU", imagem="IM", titular_id="1")
     #c.proporTroca(id_voucher1="2", id_voucher2="4")
     #c.realizarTroca(id_troca="1")
     #c.negarTroca(id_troca="2")
-    c.apresentarVouchersUsuario("2")
+    r = c.apresentarVouchers()
     #c.realizarLogin("lsls", "123")
     c.desconectar()
 
