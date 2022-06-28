@@ -248,6 +248,7 @@
                 width: self.minimum_width
         
 <TelaVouchers>:
+    on_pre_enter: root.on_pre_enter()
     BoxLayout:
         orientation: 'vertical'
         padding: 50
@@ -261,6 +262,9 @@
         Button:
             text: 'Retornar menu'
             on_press: root.IrParaMenu()
+        Button:
+            text: 'Carregar Dados'
+            on_press: joia.LoadData()
         RV:
             id: joia
             viewclass: 'Voucher'  # defines the viewtype for the data items.

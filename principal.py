@@ -64,24 +64,17 @@ class Voucher(RecycleDataViewBehavior, BoxLayout):
 
 class RV(RecycleView):
     rv_data_list = ListProperty()
-    
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.rv_data_list.extend([{'label_titulo': f'Crazy {i}',
-                                   'label_descricao': f'Crow {i}',
-                                   'button_nome_gato': f'Fresh {i}',
-                                   'label_local': f'Crow {i}',
-                                   'label_lanche': f'Crow {i}',
-                                   'label_duracao': f'Crow {i}'} for i in range(1)])
-    
+
     # Os dados dos vouchers a serem exibidos terão que ser passados como parâmetro aqui (ou função semelhante seguindo estrutura análoga)
-    def AddData(self):
-        self.rv_data_list.extend([{'label_titulo': f'Crazy {i}',
-                                   'label_descricao': f'Crow {i}',
-                                   'button_nome_gato': f'Fresh {i}',
-                                   'label_local': f'Crow {i}',
-                                   'label_lanche': f'Crow {i}',
-                                   'label_duracao': f'Crow {i}'} for i in range(2)])
+    def LoadData(self):
+        dados = c.apresentarVouchers()
+
+        self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
+                                   'label_descricao': dados[str(i)]["descricao"],
+                                   'button_nome_gato': dados[str(i)]["gato"],
+                                   'label_local': dados[str(i)]["local"],
+                                   'label_lanche': dados[str(i)]["lanche"],
+                                   'label_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
 
     def Clean(self):
         self.rv_data_list = []
