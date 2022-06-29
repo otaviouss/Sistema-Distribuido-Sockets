@@ -129,7 +129,12 @@ class banco():
         prisma = Prisma()
         await prisma.connect()
 
-        trocas = await prisma.troca.find_many()
+        trocas = await prisma.troca.find_many(
+            include={
+                'v1': True,
+                'v2': True,
+            }
+        )
 
         await prisma.disconnect()
 

@@ -47,6 +47,41 @@ class Servidor():
         loop.run_until_complete(banco.inserir_voucher(titulo, descricao, gato, local, lanche, int(duracao), imagem, int(titular_id)))
         loop.close()
         c.close()
+    
+    def apresentarTrocas(self, c):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        trocas = loop.run_until_complete(banco.ver_Trocas())
+        loop.close()
+
+        v = {}
+        for i in range(len(trocas)):
+            v[i] = {
+                "id_v1":trocas[0].v1.id,
+                "titulo_v1":trocas[0].v1.titulo,
+                "descricao_v1":trocas[0].v1.descricao,
+                "gato_v1":trocas[0].v1.gato,
+                "local_v1":trocas[0].v1.local,
+                "lanche_v1":trocas[0].v1.lanche,
+                "duracao_v1":trocas[0].v1.duracao,
+                "imagem_v1":trocas[0].v1.imagem,
+                "titular_id_v1":trocas[0].v1.titular_id,
+                "id_v2":trocas[0].v2.id,
+                "titulo_v2":trocas[0].v2.titulo,
+                "descricao_v2":trocas[0].v2.descricao,
+                "gato_v2":trocas[0].v2.gato,
+                "local_v2":trocas[0].v2.local,
+                "lanche_v2":trocas[0].v2.lanche,
+                "duracao_v2":trocas[0].v2.duracao,
+                "imagem_v2":trocas[0].v2.imagem,
+                "titular_id_v2":trocas[0].v2.titular_id,
+            }
+
+        file = json.dumps(v)
+
+        c.sendall(file.encode())
+
+        c.close()
 
     def proporTroca(self, id_voucher1, id_voucher2, c):
         loop = asyncio.new_event_loop()
@@ -168,6 +203,8 @@ def main():
             start_new_thread(s.checarCliente, (file["email"], file["senha"], c))
         elif(file["op"]=="CV"):
             start_new_thread(s.cadastrarVoucher, (file["titulo"], file["descricao"], file["gato"], file["local"], file["lanche"], file["duracao"], file["titular_id"], c))
+        elif(file["op"]=="AT"):
+            start_new_thread(s.apresentarTrocas, (c,))
         elif(file["op"]=="PT"):
             start_new_thread(s.proporTroca, (file["id_voucher1"], file["id_voucher2"], c))
         elif(file["op"]=="RT"):

@@ -59,6 +59,22 @@ class Cliente():
         self.s.sendall(file.encode())
 
         self.desconectar()
+    
+    def apresentarTrocas(self):
+        self.s = self.conectar()
+        
+        file = json.dumps({"op": "AT"})
+
+        self.s.sendall(file.encode())
+
+        dados = self.s.recv(1048576).decode()
+
+        print(dados)
+        print("Apresentando todas as trocas.")
+
+        self.desconectar()
+
+        return json.loads(dados)
 
     def proporTroca(self, id_voucher1, id_voucher2):
         self.s = self.conectar()
@@ -124,12 +140,13 @@ class Cliente():
 def main():
     c = Cliente()
     #c.solicitarCriarUsuario(email="teste", nome="AAA", senha="123")	
-    c.realizarLogin("marta@gmail.com", "12345")
+    c.realizarLogin("marta@gmail.com", "123")
     #c.cadastrarVoucher(titulo="hahah", descricao="hehehe", gato="GT", local="LC", lanche="LA", duracao="DU", imagem="IM", titular_id="1")
     #c.proporTroca(id_voucher1="2", id_voucher2="4")
     #c.realizarTroca(id_troca="1")
     #c.negarTroca(id_troca="2")
-    r = c.apresentarVouchers()
+    #c.apresentarVouchers()
+    c.apresentarTrocas()
     #c.realizarLogin("lsls", "123")
     c.desconectar()
 
