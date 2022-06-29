@@ -75,10 +75,23 @@ class RV(RecycleView):
         self.__class__.instances.append(self)
 
 
-    # Os dados dos vouchers a serem exibidos terão que ser passados como parâmetro aqui (ou função semelhante seguindo estrutura análoga)
+    # Carrega todos os Vouchers
     def LoadData(self):
         self.rv_data_list = []
         dados = c.apresentarVouchers()
+
+        self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
+                                   'label_descricao': dados[str(i)]["descricao"],
+                                   'label_nome_gato': dados[str(i)]["gato"],
+                                   'label_local': dados[str(i)]["local"],
+                                   'label_lanche': dados[str(i)]["lanche"],
+                                   'label_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
+    
+    # Carrega os Vouchers do Usuário Logado
+    def LoadDataUser(self):
+        self.rv_data_list = []
+        dados = c.apresentarVouchersUsuario()
+        self.meus_vouchers = dados
 
         self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
                                    'label_descricao': dados[str(i)]["descricao"],
@@ -98,10 +111,12 @@ class RV(RecycleView):
         self.dupla_troca.append(self.layout_manager.selected_nodes[0])
         self.layout_manager.selected_nodes = []
 
+    # Propõe uma Troca
     def GetPropostaTroca(self):
         print("HELPS : ", self.dupla_troca)
-        self.dupla_troca = []
-        print(" POs HELPS : ", self.dupla_troca)
+        todos_vouchers = c.apresentarVouchers()
+        c.proporTroca(todos_vouchers[str(self.dupla_troca[0])]["id"], self.meus_vouchers[str(self.dupla_troca[1])]["id"])
+        self.dupla_troca.clear()
 
 
 
@@ -120,10 +135,10 @@ class VoucherII(BoxLayout): # Não suporta seleção do voucher na interface (n�
 class RVII(RecycleView):
     rvII_data_list = ListProperty()
 
-    # Os dados dos vouchers a serem exibidos terão que ser passados como parâmetro aqui (ou função semelhante seguindo estrutura análoga)
+    # Carrega os Vouchers do Usuário Logado
     def LoadData(self):
         self.rvII_data_list = []
-        dados = c.apresentarVouchers()
+        dados = c.apresentarVouchersUsuario()
 
         self.rvII_data_list.extend([{'labelII_titulo': dados[str(i)]["titulo"],
                                    'labelII_descricao': dados[str(i)]["descricao"],

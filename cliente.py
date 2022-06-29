@@ -22,7 +22,7 @@ class Cliente():
         self.s.sendall(file.encode())
 
         dados = self.s.recv(1024).decode()
-        print(dados)
+
         if(dados=="1"):
             print("Sucesso!")
         else:
@@ -41,11 +41,11 @@ class Cliente():
 
         if(dados!="0"):
             self.user_id = int(dados)
-            print("Sucesso!")
+            print("Logado com Sucesso!")
             self.desconectar()
             return 1
         else:
-            print("Falha!")
+            print("Falha ao Logar!")
             self.desconectar()
             return 0
 
@@ -63,6 +63,7 @@ class Cliente():
     def proporTroca(self, id_voucher1, id_voucher2):
         self.s = self.conectar()
 
+        print("Propondo Troca")
         file = json.dumps({"op": "PT", "id_voucher1": id_voucher1, "id_voucher2": id_voucher2})
         
         self.s.sendall(file.encode())
@@ -87,16 +88,16 @@ class Cliente():
 
         self.desconectar()
 
-    def apresentarVouchersUsuario(self, id_usuario):
+    def apresentarVouchersUsuario(self):
         self.s = self.conectar()
         
-        file = json.dumps({"op": "VU", "id_usuario": id_usuario})
+        file = json.dumps({"op": "VU", "id_usuario": self.user_id})
 
         self.s.sendall(file.encode())
 
         dados = self.s.recv(1048576).decode()
 
-        print("V: ", json.loads(dados))
+        print("Apresentando vouchers do usuário logado.")
 
         self.desconectar()
 
@@ -111,7 +112,7 @@ class Cliente():
 
         dados = self.s.recv(1048576).decode()
 
-        print("V: ", json.loads(dados))
+        print("Apresentando todos os vouchers.")
 
         self.desconectar()
 

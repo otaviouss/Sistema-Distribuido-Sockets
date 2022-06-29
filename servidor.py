@@ -78,10 +78,24 @@ class Servidor():
     def apresentarVouchersUsuario(self, id_usuario, c):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
-        vouchers = loop.run_until_complete(banco.ver_vouchers_usuario(int(id_usuario)))
+        vouchers = loop.run_until_complete(banco.ver_vouchers_usuario(id_usuario))
         loop.close()
 
-        file = json.dumps(str(vouchers))
+        v = {}
+        for i in range(len(vouchers)):
+            v[i] = {
+                "id":vouchers[i].id,
+                "titulo":vouchers[i].titulo,
+                "descricao":vouchers[i].descricao,
+                "gato":vouchers[i].gato,
+                "local":vouchers[i].local,
+                "lanche":vouchers[i].lanche,
+                "duracao":vouchers[i].duracao,
+                "imagem":vouchers[i].imagem,
+                "titular_id":vouchers[i].titular_id,
+            }
+
+        file = json.dumps(v)
 
         c.sendall(file.encode())
 
@@ -106,8 +120,6 @@ class Servidor():
                 "imagem":vouchers[i].imagem,
                 "titular_id":vouchers[i].titular_id,
             }
-
-        print(v)
 
         file = json.dumps(v)
 
@@ -149,6 +161,7 @@ def main():
 
         file = json.loads(dados)
         print(file)
+
         if(file["op"]=="CC"):
             start_new_thread(s.cadastrarCliente, (file["email"], file['nome'], file["senha"], c))
         elif(file["op"]=="FL"):

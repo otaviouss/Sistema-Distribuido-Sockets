@@ -284,11 +284,11 @@
 <PopupTroca@Popup>:
     auto_dismiss: False
     title: 'Troca'
-    on_open: jovial.LoadData(), root.Teste()
+    on_open: jovial.LoadDataUser(), root.Teste()
     BoxLayout:
         orientation: 'vertical'
         Label:
-            text: 'Selecione um voucher para propor a troca'
+            text: 'Selecione um voucher seu para propor a troca'
             size_hint: 1, None
             height: 50
         RV:
