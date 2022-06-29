@@ -24,6 +24,6 @@ Por fim, execute o servidor em um terminal usando:
 
 E em outro terminal, execute o cliente:
 
-``python3 principa.py``
+``python3 principal.py``
 
 Algumas informações podem ser impressas no terminal tanto do servidor quanto do cliente, o que pode facilitar o entendimento do que está acontecendo no back-end do programa.
