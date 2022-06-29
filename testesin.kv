@@ -237,7 +237,18 @@
     LabelCadastro:
         text: root.labelII_duracao
 
-
+<VoucherSimples>:
+    canvas.before:
+        Color:
+            rgba: (.0, 0.9, .7, .3)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    LabelCadastro:
+        text: 'Crazy people'
+    LabelCadastro:
+        text: 'Stupid Rich'
 <TelaMeusVouchers>:
     on_enter: terra.LoadData()
     BoxLayout:
@@ -362,10 +373,29 @@
             rgba: (.0, 0.9, .1, .3)
     orientation: 'vertical'
     LabelCadastro:
-        text: 'Troca'
-    Voucher:
+        text: root.label_titulo
+        color: 0,0,0,1
+        bold: 1
+    BoxLayout:
+        orientation: 'horizontal'
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: root.label_trocaI_titulo
+                color: 0,0,0,1
+            Label:
+                text: root.label_trocaI_gato
+                color: 0,0,0,1
 
-    Voucher:
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                text: root.label_trocaII_titulo
+                color: 0,0,0,1
+
+            Label:
+                text: root.label_trocaII_gato
+                color: 0,0,0,1
 
     BoxLayout:
         orientation: 'horizontal'
@@ -375,7 +405,7 @@
             text: 'Negar'
 
 <TelaTrocas>:
-    on_enter: compTroca.LoadData()
+    on_enter: compTroca.InicializarTrocas()
     BoxLayout:
         orientation: 'vertical'
         #padding: 50
@@ -387,6 +417,11 @@
             font_size: 45
             size_hint: 1, None
             height: 50
+        Button:
+            text: 'Carregar Trocas'
+            size_hint: 1, None
+            height: 50
+            on_release: compTroca.LoadTrocas()
         RV:
             id: compTroca
             viewclass: 'ComponenteTroca'  # defines the viewtype for the data items.
@@ -396,7 +431,7 @@
             #padding:50, 50
             space_x: self.size[0]/3
             SelectableRecycleGridLayout:
-                cols: 3
+                cols: 2
                 spacing: 10
                 size_hint: 1, None
                 default_size: None, dp(112)
@@ -407,4 +442,4 @@
             text: 'Retornar menu'
             size_hint: 1, None
             height: 50
-            on_press: root.IrParaMenu()
+            on_press:  root.IrParaMenu()

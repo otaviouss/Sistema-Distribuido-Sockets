@@ -1,3 +1,4 @@
+from tokenize import String
 import kivy
 
 from cliente import Cliente
@@ -68,11 +69,10 @@ class Voucher(RecycleDataViewBehavior, BoxLayout):
 
 class RV(RecycleView):
     rv_data_list = ListProperty()
-    instances = []
     dupla_troca = []
     def __init__(self, **kwargs):
         super(RV, self).__init__(**kwargs)
-        self.__class__.instances.append(self)
+
 
 
     # Carrega todos os Vouchers
@@ -86,6 +86,7 @@ class RV(RecycleView):
                                    'label_local': dados[str(i)]["local"],
                                    'label_lanche': dados[str(i)]["lanche"],
                                    'label_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
+    
     
     # Carrega os Vouchers do Usuário Logado
     def LoadDataUser(self):
@@ -119,6 +120,27 @@ class RV(RecycleView):
         self.dupla_troca.clear()
 
 
+    def InicializarTrocas(self):
+        qtd_trocas = len(c.apresentarTrocas())
+
+        self.rv_data_list = []
+        self.rv_data_list.extend([{'label_titulo': 'Troca ' + str(i)} for i in range(qtd_trocas)])
+
+    def LoadTrocas(self):
+        trocas = c.apresentarTrocas()
+        #print(trocas)
+        i = 0
+        for child in self.children[0].children[:]:
+            child.label_trocaI_titulo = trocas[str(i)]['titulo_v1']
+            child.label_trocaI_gato = trocas[str(i)]['gato_v1']
+            child.label_trocaII_titulo = trocas[str(i)]['titulo_v2']
+            child.label_trocaII_gato = trocas[str(i)]['gato_v2']
+            i += 1
+            
+    
+
+
+
 
 #------------------------------------------------------------------------------------
 class PopupTroca(Popup):
@@ -147,8 +169,17 @@ class RVII(RecycleView):
                                    'labelII_lanche': dados[str(i)]["lanche"],
                                    'labelII_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
 
+
+class VoucherSimples(BoxLayout):
+    pass
+
 class ComponenteTroca(BoxLayout):
     label_titulo = StringProperty()
+    label_trocaI_titulo = StringProperty()
+    label_trocaI_gato = StringProperty()
+    label_trocaII_titulo = StringProperty()
+    label_trocaII_gato = StringProperty()
+
 
 class Login(Screen):
     
@@ -191,6 +222,8 @@ class TelaTrocas(Screen):
     def loadData():
         print("A")
         pass
+    def IrParaMenu(self):
+        self.parent.current = 'telamenu'
 
 class TelaCadastro(Screen):
 
