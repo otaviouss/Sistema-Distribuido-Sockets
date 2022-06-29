@@ -184,8 +184,13 @@ class TelaMeusVouchers(Screen):
     def IrParaMenu(self):
         self.parent.current = 'telamenu'
 
-class TelaTrocas(Screen):
+class Troca(BoxLayout): # Não suporta seleção do voucher na interface (não é clicavel)
     pass
+
+class TelaTrocas(Screen):
+    def loadData():
+        print("A")
+        pass
 
 class TelaCadastro(Screen):
 
