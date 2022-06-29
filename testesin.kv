@@ -1,5 +1,5 @@
 #:kivy 2.1.0
-
+#:import Factory kivy.factory.Factory
 <LabelLogin@Label>:
     canvas.before:
         Color:
@@ -216,74 +216,145 @@
     LabelCadastro:
         text: root.label_duracao
 
+<VoucherII>:
+    canvas.before:
+        Color:
+            rgba: (.0, 0.9, .1, .3)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: 'vertical'
+    LabelCadastro:
+        text: root.labelII_titulo
+    LabelCadastro:
+        text: root.labelII_descricao
+    LabelCadastro:
+        text: root.labelII_nome_gato
+    LabelCadastro:
+        text: root.labelII_local
+    LabelCadastro:
+        text: root.labelII_lanche
+    LabelCadastro:
+        text: root.labelII_duracao
+
 
 <TelaMeusVouchers>:
+    on_enter: terra.LoadData()
     BoxLayout:
         orientation: 'vertical'
-        padding: 50
-        spacing: 20
+        #padding: 50
+        #spacing: 20
         LabelLogin:
             text: 'Meus Vouchers'
             color: 0,0,0,1
             bold: 1
             font_size: 45
             size_hint: 1, None
+            height: 50
         Button:
             text: 'Retornar menu'
             on_press: root.IrParaMenu()
-        RV:
-            id: joia
-            viewclass: 'Voucher'  # defines the viewtype for the data items.
+            size_hint: 1, None
+            height: 50
+        RVII:
+            id: terra
+            viewclass: 'VoucherII'  # defines the viewtype for the data items.
             orientation: "horizontal"
-            data: self.rv_data_list
-            spacing: 80
-            padding:50, 50
-            space_x: self.size[0]/3
-            SelectableRecycleGridLayout:
+            data: self.rvII_data_list
+            #spacing: 80
+            #padding: 50, 50
+            #space_x: self.size[0]/3
+            #size_hint: 1, 1
+            do_scroll_y: True
+            do_scroll_x: False 
+
+            RecycleGridLayout:
                 cols: 3
-                size_hint: 1, None
-                default_size: None, dp(56)
+                spacing: 10
+                #padding: 1, 50
+                size_hint: 1, 1
+                default_size: None, dp(112)
                 default_size_hint: 1, None
                 height: self.minimum_height
                 width: self.minimum_width
         
-<TelaVouchers>:
-    on_pre_enter: root.on_pre_enter()
+
+
+
+<PopupTroca@Popup>:
+    auto_dismiss: False
+    title: 'Troca'
+    on_open: jovial.LoadData(), root.Teste()
     BoxLayout:
         orientation: 'vertical'
-        padding: 50
-        spacing: 20
+        Label:
+            text: 'Selecione um voucher para propor a troca'
+            size_hint: 1, None
+            height: 50
+        RV:
+            id: jovial
+            viewclass: 'Voucher'  # defines the viewtype for the data items.
+            orientation: "horizontal"
+            data: self.rv_data_list
+            space_x: self.size[0]/3
+            SelectableRecycleGridLayout:
+                cols: 3
+                spacing: 10
+                size_hint: 1, None
+                default_size: None, dp(112)
+                default_size_hint: 1, None
+                height: self.minimum_height
+                width: self.minimum_width
+        Button:
+            text: 'Propor Troca'
+            size_hint: 1, None
+            height: 50
+            on_release:
+                if jovial.IsAnyVoucherSelected(): root.dismiss(); jovial.AddVoucherSelected(), jovial.GetPropostaTroca()
+
+
+<TelaVouchers>:
+    on_enter: joia.LoadData(), root.PrintChildren()
+    BoxLayout:
+        orientation: 'vertical'
+        #padding: 50
+        #spacing: 20
         LabelLogin:
             text: 'Vouchers'
             color: 0,0,0,1
             bold: 1
             font_size: 45
             size_hint: 1, None
+            height: 50
         Button:
             text: 'Retornar menu'
+            size_hint: 1, None
+            height: 50
             on_press: root.IrParaMenu()
-        Button:
-            text: 'Carregar Dados'
-            on_press: joia.LoadData()
         RV:
             id: joia
             viewclass: 'Voucher'  # defines the viewtype for the data items.
             orientation: "horizontal"
             data: self.rv_data_list
-            spacing: 80
-            padding:50, 50
+            #spacing: 80
+            #padding:50, 50
             space_x: self.size[0]/3
             SelectableRecycleGridLayout:
                 cols: 3
+                spacing: 10
                 size_hint: 1, None
-                default_size: None, dp(56)
+                default_size: None, dp(112)
                 default_size_hint: 1, None
                 height: self.minimum_height
                 width: self.minimum_width
         Button:
-            text: 'Ampliar visualização'
-            on_press: root.IrParaMenu()
-
+            text: 'Propor Troca'
+            #on_press: root.IrParaMenu()
+            size_hint: 1, None
+            height: 50
+            on_release: 
+                if joia.IsAnyVoucherSelected(): Factory.PopupTroca().open(); joia.AddVoucherSelected()
+                #print(joia.IsAnyVoucherSelected()) 
 
 <ComponenteTroca>:
     orientation: 'vertical'

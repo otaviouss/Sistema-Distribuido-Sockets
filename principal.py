@@ -17,6 +17,7 @@ from kivy.uix.recycleboxlayout import RecycleBoxLayout
 from kivy.uix.recyclegridlayout import RecycleGridLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
+from kivy.uix.popup import Popup
 
 
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
@@ -37,7 +38,6 @@ class Voucher(RecycleDataViewBehavior, BoxLayout):
     label_duracao = StringProperty()
     '''----------------------------'''
 
-
     def refresh_view_attrs(self, rv, index, data):
         ''' Catch and handle the view changes '''
         self.index = index
@@ -55,31 +55,82 @@ class Voucher(RecycleDataViewBehavior, BoxLayout):
     def apply_selection(self, rv, index, is_selected):
         ''' Respond to the selection of items in the view. '''
         self.selected = is_selected
+        #print("__> ", self.selected)
+        global selecionado
+        selecionado = self.selected
         if is_selected:
-            #print("selection changed to {0}".format(rv.data[index]))
+            print("selection changed to {0}".format(index))
             pass
         else:
-            #print("selection removed for {0}".format(rv.data[index]))
+            print("selection removed for {0}".format(index))
             pass
+    
 
 class RV(RecycleView):
     rv_data_list = ListProperty()
+    instances = []
+    dupla_troca = []
+    def __init__(self, **kwargs):
+        super(RV, self).__init__(**kwargs)
+        self.__class__.instances.append(self)
+
 
     # Os dados dos vouchers a serem exibidos terão que ser passados como parâmetro aqui (ou função semelhante seguindo estrutura análoga)
     def LoadData(self):
+        self.rv_data_list = []
         dados = c.apresentarVouchers()
 
         self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
                                    'label_descricao': dados[str(i)]["descricao"],
-                                   'button_nome_gato': dados[str(i)]["gato"],
+                                   'label_nome_gato': dados[str(i)]["gato"],
                                    'label_local': dados[str(i)]["local"],
                                    'label_lanche': dados[str(i)]["lanche"],
                                    'label_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
+    
+    def IsAnyVoucherSelected(self):
+        if not self.layout_manager.selected_nodes:
+            return False
+        
+        return True
 
-    def Clean(self):
-        self.rv_data_list = []
+    def AddVoucherSelected(self):
+        print("Check : ", self.dupla_troca)
+        self.dupla_troca.append(self.layout_manager.selected_nodes[0])
+        self.layout_manager.selected_nodes = []
+
+    def GetPropostaTroca(self):
+        print("HELPS : ", self.dupla_troca)
+        self.dupla_troca = []
+        print(" POs HELPS : ", self.dupla_troca)
+
+
 
 #------------------------------------------------------------------------------------
+class PopupTroca(Popup):
+    def Teste(self):
+        print('Loucuras')
+
+class VoucherII(BoxLayout): # Não suporta seleção do voucher na interface (não é clicavel)
+    labelII_titulo = StringProperty()
+    labelII_descricao = StringProperty()
+    labelII_nome_gato = StringProperty()
+    labelII_local = StringProperty()
+    labelII_lanche = StringProperty()
+    labelII_duracao = StringProperty()
+class RVII(RecycleView):
+    rvII_data_list = ListProperty()
+
+    # Os dados dos vouchers a serem exibidos terão que ser passados como parâmetro aqui (ou função semelhante seguindo estrutura análoga)
+    def LoadData(self):
+        self.rvII_data_list = []
+        dados = c.apresentarVouchers()
+
+        self.rvII_data_list.extend([{'labelII_titulo': dados[str(i)]["titulo"],
+                                   'labelII_descricao': dados[str(i)]["descricao"],
+                                   'labelII_nome_gato': dados[str(i)]["gato"],
+                                   'labelII_local': dados[str(i)]["local"],
+                                   'labelII_lanche': dados[str(i)]["lanche"],
+                                   'labelII_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
 
 class ComponenteTroca(BoxLayout):
     label_titulo = StringProperty()
@@ -109,6 +160,10 @@ class Login(Screen):
 class TelaVouchers(Screen):
     def IrParaMenu(self):
         self.parent.current = 'telamenu'
+
+    def PrintChildren(self):
+        print("AAAH: ", self.children[0].children[1])
+        pass
 
 class TelaMeusVouchers(Screen):
     def IrParaMenu(self):
@@ -173,5 +228,12 @@ class TestesInApp(App):
 
 if __name__ == '__main__':
     c = Cliente() # Variável "global" por falta de melhor forma
+    selecionado = False
     principal = TestesInApp()
     principal.run()
+
+
+'''
+https://stackoverflow.com/questions/40470992/too-many-indentation-levels-in-on-press-button
+https://stackoverflow.com/questions/56226448/how-to-get-the-instance-from-a-recycleview-with-viewclass-as-button
+'''
