@@ -89,7 +89,7 @@ class RV(RecycleView):
     
     # Carrega os Vouchers do Usuário Logado
     def LoadDataUser(self):
-        self.rv_data_list = []
+        self.rv_data_list.clear()
         dados = c.apresentarVouchersUsuario()
         self.meus_vouchers = dados
 

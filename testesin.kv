@@ -359,25 +359,32 @@
 <ComponenteTroca>:
     orientation: 'vertical'
     LabelLogin:
-        text: 'Titulo'#root.label_titulo
+        text: 'Troca'
+        color: 0,0,0,1
+        bold: 1
+        font_size: 20
 
-    BoxLayout:
-        orientation: 'horizontal'
 
-        #Voucher:
 
-        #Voucher:
-
-    LabelLogin:
-        text: 'Aceitar?'
-    BoxLayout:
-        orientation: 'horizontal'
-        Button:
-            text: 'S'
-        Button:
-            text: 'N'
 
 <TelaTrocas>:
     BoxLayout:
-        orientation: 'horizontal'
+
+        # creating Canvas
+        canvas:
+            Color:
+                rgba: 216 / 255., 195 / 255., 88 / 255., 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+        orientation: 'vertical'
+        Label:
+            text: 'Trocas Pendentes'
+            color: 1,1,1,0
+            bold: 1
+            font_size: 45
+
+
         ComponenteTroca:
