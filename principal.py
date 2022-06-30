@@ -75,7 +75,7 @@ class RV(RecycleView):
 
     # Carrega todos os Vouchers
     def LoadData(self):
-        self.rv_data_list = []
+        self.rv_data_list.clear()
         dados = c.apresentarVouchers()
 
         self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
