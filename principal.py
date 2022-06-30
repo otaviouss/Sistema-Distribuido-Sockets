@@ -91,6 +91,7 @@ class RV(RecycleView):
         self.rv_data_list.clear()
         dados = c.apresentarVouchersUsuario()
         self.meus_vouchers = dados
+        self.id_troca = -1
 
         self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
                                    'label_descricao': dados[str(i)]["descricao"],
@@ -114,7 +115,7 @@ class RV(RecycleView):
     def GetPropostaTroca(self):
         print("HELPS : ", self.dupla_troca)
         todos_vouchers = c.apresentarVouchers()
-        c.proporTroca(todos_vouchers[str(self.dupla_troca[0])]["id"], self.meus_vouchers[str(self.dupla_troca[1])]["id"])
+        c.proporTroca(self.meus_vouchers[str(self.dupla_troca[1])]["id"], todos_vouchers[str(self.dupla_troca[0])]["id"])
         self.dupla_troca.clear()
 
 
@@ -123,25 +124,19 @@ class RV(RecycleView):
         qtd_trocas = len(trocas)
 
         self.rv_data_list = []
+
+        if(qtd_trocas==0): 
+            self.rv_data_list = []
+            return
+
         self.rv_data_list.extend([{'label_titulo': 'Troca ' + str(i),
                                     'label_trocaI_titulo': trocas[str(i)]['titulo_v1'],
                                     'label_trocaI_gato': trocas[str(i)]['gato_v1'],
                                     'label_trocaII_titulo': trocas[str(i)]['titulo_v2'],
                                     'label_trocaII_gato': trocas[str(i)]['gato_v2'],
+                                    'id_troca': str(trocas[str(i)]['id_troca']),
                                     } for i in range(qtd_trocas)])
 
-
-    def LoadTrocas(self):
-        trocas = c.apresentarTrocas()
-        #print(trocas)
-        i = 0
-        for child in self.children[0].children[:]:
-            child.label_trocaI_titulo = trocas[str(i)]['titulo_v1']
-            child.label_trocaI_gato = trocas[str(i)]['gato_v1']
-            child.label_trocaII_titulo = trocas[str(i)]['titulo_v2']
-            child.label_trocaII_gato = trocas[str(i)]['gato_v2']
-            child.id_troca = str(trocas[str(i)]['id_troca'])
-            i += 1
             
 class ComponenteTroca(BoxLayout):
     label_titulo = StringProperty()

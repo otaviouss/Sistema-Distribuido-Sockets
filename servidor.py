@@ -58,7 +58,7 @@ class Servidor():
         pos = 0
         for i in range(len(trocas)):
             # Status == 0 significa apresentar apenas trocas pendentes
-            if(trocas[i].v2.id == int(id_usuario) and trocas[i].status == 0):
+            if(trocas[i].v2.titular_id == int(id_usuario) and trocas[i].status == 0):
                 v[pos] = {
                     "id_troca": i+1,
                     "id_v1":trocas[i].v1.id,
@@ -102,11 +102,9 @@ class Servidor():
             loop.run_until_complete(banco.alterar_Status_Troca_Aceito(int(id_troca)))
             loop.close()
             
-            print("Sucesso na Troca")
             c.sendall("1".encode())
             c.close()
         except:
-            print("Falha na Troca")
             c.sendall("0".encode())
             c.close()
 
@@ -116,12 +114,10 @@ class Servidor():
             asyncio.set_event_loop(loop)
             loop.run_until_complete(banco.alterar_Status_Troca_Rejeitado(int(id_troca)))
             loop.close()
-            
-            print("Sucesso na Rejeição da Troca")
+
             c.sendall("1".encode())
             c.close()
         except:
-            print("Falha na Rejeição da Troca")
             c.sendall("0".encode())
             c.close()
     

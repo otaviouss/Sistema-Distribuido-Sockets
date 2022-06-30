@@ -175,6 +175,28 @@ class banco():
             }
         )
 
+        await prisma.troca.update_many(
+            data={
+                'status': 2,
+            },
+            
+            where={
+                'OR': [
+                    {
+                        'voucher1_id': troca.v1.id,
+                    },
+                    {
+                        'voucher2_id': troca.v2.id,
+                    },
+                ],
+                'NOT': [
+                    {
+                        'status': 1,
+                    },
+                ],
+            }
+        )
+
         await prisma.disconnect()
     
     async def alterar_Status_Troca_Rejeitado(id) -> None:
@@ -208,13 +230,13 @@ class banco():
     
 
 if __name__ == '__main__':
-    u = asyncio.run(banco.inserir_usuario("aaa@gmail.com", "Larissa", "123"))
-    asyncio.run(banco.inserir_voucher("V1", "D1", "Belinha", "Sala", "Ração", "", "URL", u))
-    asyncio.run(banco.nova_Troca(3, 4))
-    asyncio.run(banco.ver_usuarios())
-    asyncio.run(banco.ver_vouchers())
-    asyncio.run(banco.alterar_Status_Troca_Rejeitado(1))
-    asyncio.run(banco.ver_Trocas())
-    asyncio.run(banco.alterar_Status_Troca_Aceito(6))
+    #u = asyncio.run(banco.inserir_usuario("aaa@gmail.com", "Larissa", "123"))
+    #asyncio.run(banco.inserir_voucher("V1", "D1", "Belinha", "Sala", "Ração", "", "URL", u))
+    #asyncio.run(banco.nova_Troca(3, 4))
+    #asyncio.run(banco.ver_usuarios())
+    #asyncio.run(banco.ver_vouchers())
+    #asyncio.run(banco.alterar_Status_Troca_Rejeitado(1))
+    #asyncio.run(banco.ver_Trocas())
+    asyncio.run(banco.alterar_Status_Troca_Aceito(8))
 
 
