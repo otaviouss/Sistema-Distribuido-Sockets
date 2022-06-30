@@ -129,11 +129,7 @@ class RV(RecycleView):
                                     'label_trocaII_titulo': trocas[str(i)]['titulo_v2'],
                                     'label_trocaII_gato': trocas[str(i)]['gato_v2'],
                                     } for i in range(qtd_trocas)])
-        
-        i = 0
-        for child in self.children[0].children[:]:
-            child.id_troca = str(trocas[str(i)]['id_troca'])
-            i += 1
+
 
     def LoadTrocas(self):
         trocas = c.apresentarTrocas()
