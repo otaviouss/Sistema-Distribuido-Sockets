@@ -150,6 +150,28 @@ class banco():
             },
             where={
                 'id': id,
+            },
+            include={
+                'v1': True,
+                'v2': True,
+            }
+        )
+
+        await prisma.voucher.update(
+            data={
+                'titular_id': troca.v2.titular_id,
+            },
+            where={
+                'id': troca.v1.id,
+            }
+        )
+
+        await prisma.voucher.update(
+            data={
+                'titular_id': troca.v1.titular_id,
+            },
+            where={
+                'id': troca.v2.id,
             }
         )
 
@@ -193,5 +215,6 @@ if __name__ == '__main__':
     asyncio.run(banco.ver_vouchers())
     asyncio.run(banco.alterar_Status_Troca_Rejeitado(1))
     asyncio.run(banco.ver_Trocas())
+    asyncio.run(banco.alterar_Status_Troca_Aceito(6))
 
 

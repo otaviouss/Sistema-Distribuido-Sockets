@@ -63,14 +63,14 @@ class Cliente():
     def apresentarTrocas(self):
         self.s = self.conectar()
         
-        file = json.dumps({"op": "AT"})
+        file = json.dumps({"op": "AT", "id_usuario": self.user_id})
 
         self.s.sendall(file.encode())
 
         dados = self.s.recv(1048576).decode()
 
         print(dados)
-        print("Apresentando todas as trocas.")
+        print("Apresentando todas as trocas pendentes.")
 
         self.desconectar()
 
@@ -93,6 +93,8 @@ class Cliente():
 
         self.s.sendall(file.encode())
 
+        print("Troca Aceita")
+
         self.desconectar()
 
     def negarTroca(self, id_troca):
@@ -101,6 +103,8 @@ class Cliente():
         file = json.dumps({"op": "NT", "id_troca": id_troca})
 
         self.s.sendall(file.encode())
+
+        print("Troca Negada")
 
         self.desconectar()
 

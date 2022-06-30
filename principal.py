@@ -73,8 +73,6 @@ class RV(RecycleView):
     def __init__(self, **kwargs):
         super(RV, self).__init__(**kwargs)
 
-
-
     # Carrega todos os Vouchers
     def LoadData(self):
         self.rv_data_list = []
@@ -121,10 +119,21 @@ class RV(RecycleView):
 
 
     def InicializarTrocas(self):
-        qtd_trocas = len(c.apresentarTrocas())
+        trocas = c.apresentarTrocas()
+        qtd_trocas = len(trocas)
 
         self.rv_data_list = []
-        self.rv_data_list.extend([{'label_titulo': 'Troca ' + str(i)} for i in range(qtd_trocas)])
+        self.rv_data_list.extend([{'label_titulo': 'Troca ' + str(i),
+                                    'label_trocaI_titulo': trocas[str(i)]['titulo_v1'],
+                                    'label_trocaI_gato': trocas[str(i)]['gato_v1'],
+                                    'label_trocaII_titulo': trocas[str(i)]['titulo_v2'],
+                                    'label_trocaII_gato': trocas[str(i)]['gato_v2'],
+                                    } for i in range(qtd_trocas)])
+        
+        i = 0
+        for child in self.children[0].children[:]:
+            child.id_troca = str(trocas[str(i)]['id_troca'])
+            i += 1
 
     def LoadTrocas(self):
         trocas = c.apresentarTrocas()
@@ -135,9 +144,23 @@ class RV(RecycleView):
             child.label_trocaI_gato = trocas[str(i)]['gato_v1']
             child.label_trocaII_titulo = trocas[str(i)]['titulo_v2']
             child.label_trocaII_gato = trocas[str(i)]['gato_v2']
+            child.id_troca = str(trocas[str(i)]['id_troca'])
             i += 1
             
-    
+class ComponenteTroca(BoxLayout):
+    label_titulo = StringProperty()
+    label_trocaI_titulo = StringProperty()
+    label_trocaI_gato = StringProperty()
+    label_trocaII_titulo = StringProperty()
+    label_trocaII_gato = StringProperty()
+    id_troca = StringProperty()
+
+    def aceitarClick(self):
+        c.realizarTroca(self.id_troca)
+
+    def rejeitarClick(self):
+        c.negarTroca(self.id_troca)
+
 
 
 
@@ -172,14 +195,6 @@ class RVII(RecycleView):
 
 class VoucherSimples(BoxLayout):
     pass
-
-class ComponenteTroca(BoxLayout):
-    label_titulo = StringProperty()
-    label_trocaI_titulo = StringProperty()
-    label_trocaI_gato = StringProperty()
-    label_trocaII_titulo = StringProperty()
-    label_trocaII_gato = StringProperty()
-
 
 class Login(Screen):
     

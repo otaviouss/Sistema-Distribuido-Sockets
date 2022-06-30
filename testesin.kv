@@ -95,7 +95,7 @@
             font_size: 20
             on_press: root.IrParaMeusVouchers()
         Button:
-            text: 'Trocas'
+            text: 'Solicitações de Trocas Recebidas'
             bold: 1
             font_size: 20
             on_press: root.IrParaTrocas()
@@ -401,8 +401,10 @@
         orientation: 'horizontal'
         Button:
             text: 'Aceitar'
+            on_release: root.aceitarClick()
         Button:
             text: 'Negar'
+            on_release: root.rejeitarClick()
 
 <TelaTrocas>:
     on_enter: compTroca.InicializarTrocas()

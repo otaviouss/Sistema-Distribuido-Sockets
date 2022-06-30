@@ -48,34 +48,39 @@ class Servidor():
         loop.close()
         c.close()
     
-    def apresentarTrocas(self, c):
+    def apresentarTrocas(self, id_usuario, c):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         trocas = loop.run_until_complete(banco.ver_Trocas())
         loop.close()
 
         v = {}
+        pos = 0
         for i in range(len(trocas)):
-            v[i] = {
-                "id_v1":trocas[0].v1.id,
-                "titulo_v1":trocas[0].v1.titulo,
-                "descricao_v1":trocas[0].v1.descricao,
-                "gato_v1":trocas[0].v1.gato,
-                "local_v1":trocas[0].v1.local,
-                "lanche_v1":trocas[0].v1.lanche,
-                "duracao_v1":trocas[0].v1.duracao,
-                "imagem_v1":trocas[0].v1.imagem,
-                "titular_id_v1":trocas[0].v1.titular_id,
-                "id_v2":trocas[0].v2.id,
-                "titulo_v2":trocas[0].v2.titulo,
-                "descricao_v2":trocas[0].v2.descricao,
-                "gato_v2":trocas[0].v2.gato,
-                "local_v2":trocas[0].v2.local,
-                "lanche_v2":trocas[0].v2.lanche,
-                "duracao_v2":trocas[0].v2.duracao,
-                "imagem_v2":trocas[0].v2.imagem,
-                "titular_id_v2":trocas[0].v2.titular_id,
-            }
+            # Status == 0 significa apresentar apenas trocas pendentes
+            if(trocas[i].v2.id == int(id_usuario) and trocas[i].status == 0):
+                v[pos] = {
+                    "id_troca": i+1,
+                    "id_v1":trocas[i].v1.id,
+                    "titulo_v1":trocas[i].v1.titulo,
+                    "descricao_v1":trocas[i].v1.descricao,
+                    "gato_v1":trocas[i].v1.gato,
+                    "local_v1":trocas[i].v1.local,
+                    "lanche_v1":trocas[i].v1.lanche,
+                    "duracao_v1":trocas[i].v1.duracao,
+                    "imagem_v1":trocas[i].v1.imagem,
+                    "titular_id_v1":trocas[i].v1.titular_id,
+                    "id_v2":trocas[i].v2.id,
+                    "titulo_v2":trocas[i].v2.titulo,
+                    "descricao_v2":trocas[i].v2.descricao,
+                    "gato_v2":trocas[i].v2.gato,
+                    "local_v2":trocas[i].v2.local,
+                    "lanche_v2":trocas[i].v2.lanche,
+                    "duracao_v2":trocas[i].v2.duracao,
+                    "imagem_v2":trocas[i].v2.imagem,
+                    "titular_id_v2":trocas[i].v2.titular_id,
+                }
+                pos += 1
 
         file = json.dumps(v)
 
@@ -97,18 +102,28 @@ class Servidor():
             loop.run_until_complete(banco.alterar_Status_Troca_Aceito(int(id_troca)))
             loop.close()
             
+            print("Sucesso na Troca")
             c.sendall("1".encode())
             c.close()
         except:
+            print("Falha na Troca")
             c.sendall("0".encode())
             c.close()
 
     def negarTroca(self, id_troca, c):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(banco.alterar_Status_Troca_Rejeitado(int(id_troca)))
-        loop.close()
-        c.close()
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            loop.run_until_complete(banco.alterar_Status_Troca_Rejeitado(int(id_troca)))
+            loop.close()
+            
+            print("Sucesso na Rejeição da Troca")
+            c.sendall("1".encode())
+            c.close()
+        except:
+            print("Falha na Rejeição da Troca")
+            c.sendall("0".encode())
+            c.close()
     
     def apresentarVouchersUsuario(self, id_usuario, c):
         loop = asyncio.new_event_loop()
@@ -204,7 +219,7 @@ def main():
         elif(file["op"]=="CV"):
             start_new_thread(s.cadastrarVoucher, (file["titulo"], file["descricao"], file["gato"], file["local"], file["lanche"], file["duracao"], file["titular_id"], c))
         elif(file["op"]=="AT"):
-            start_new_thread(s.apresentarTrocas, (c,))
+            start_new_thread(s.apresentarTrocas, (file["id_usuario"], c))
         elif(file["op"]=="PT"):
             start_new_thread(s.proporTroca, (file["id_voucher1"], file["id_voucher2"], c))
         elif(file["op"]=="RT"):
