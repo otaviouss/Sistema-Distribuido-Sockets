@@ -41,7 +41,7 @@ class Servidor():
             c.close()
 
     def cadastrarVoucher(self, titulo, descricao, gato, local, lanche, duracao, titular_id, c):
-        imagem = ""
+        imagem = str(gato[0].lower()) + '.png'
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
         loop.run_until_complete(banco.inserir_voucher(titulo, descricao, gato, local, lanche, int(duracao), imagem, int(titular_id)))
