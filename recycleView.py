@@ -1,10 +1,8 @@
-from tokenize import String
 import kivy
 
 from cliente import Cliente
 
 kivy.require('2.1.0')
-
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -20,7 +18,6 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.popup import Popup
 
-
 class SelectableRecycleGridLayout(FocusBehavior, LayoutSelectionBehavior, RecycleGridLayout):
     ''' Adds selection and focus behaviour to the view. '''
 
@@ -31,6 +28,7 @@ class Voucher(RecycleDataViewBehavior, BoxLayout):
     selectable = BooleanProperty(True)
 
     '''Atributos Voucher'''
+    imagem = StringProperty()
     label_titulo = StringProperty()
     label_descricao = StringProperty()
     label_nome_gato = StringProperty()
@@ -77,8 +75,9 @@ class RV(RecycleView):
     def LoadData(self):
         self.rv_data_list.clear()
         dados = c.apresentarVouchers()
-
-        self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
+        print(dados)
+        self.rv_data_list.extend([{'imagem': 'figuras/' + dados[str(i)]["imagem"], 
+                                   'label_titulo': dados[str(i)]["titulo"],
                                    'label_descricao': dados[str(i)]["descricao"],
                                    'label_nome_gato': dados[str(i)]["gato"],
                                    'label_local': dados[str(i)]["local"],
@@ -93,7 +92,8 @@ class RV(RecycleView):
         self.meus_vouchers = dados
         self.id_troca = -1
 
-        self.rv_data_list.extend([{'label_titulo': dados[str(i)]["titulo"],
+        self.rv_data_list.extend([{'imagem': 'figuras/' + dados[str(i)]["imagem"],
+                                   'label_titulo': dados[str(i)]["titulo"],
                                    'label_descricao': dados[str(i)]["descricao"],
                                    'label_nome_gato': dados[str(i)]["gato"],
                                    'label_local': dados[str(i)]["local"],
@@ -137,162 +137,4 @@ class RV(RecycleView):
                                     'id_troca': str(trocas[str(i)]['id_troca']),
                                     } for i in range(qtd_trocas)])
 
-            
-class ComponenteTroca(BoxLayout):
-    label_titulo = StringProperty()
-    label_trocaI_titulo = StringProperty()
-    label_trocaI_gato = StringProperty()
-    label_trocaII_titulo = StringProperty()
-    label_trocaII_gato = StringProperty()
-    id_troca = StringProperty()
-
-    def aceitarClick(self):
-        c.realizarTroca(self.id_troca)
-
-    def rejeitarClick(self):
-        c.negarTroca(self.id_troca)
-
-
-
-
-
-#------------------------------------------------------------------------------------
-class PopupTroca(Popup):
-    def Teste(self):
-        print('Loucuras')
-
-class VoucherII(BoxLayout): # Não suporta seleção do voucher na interface (não é clicavel)
-    labelII_titulo = StringProperty()
-    labelII_descricao = StringProperty()
-    labelII_nome_gato = StringProperty()
-    labelII_local = StringProperty()
-    labelII_lanche = StringProperty()
-    labelII_duracao = StringProperty()
-class RVII(RecycleView):
-    rvII_data_list = ListProperty()
-
-    # Carrega os Vouchers do Usuário Logado
-    def LoadData(self):
-        self.rvII_data_list = []
-        dados = c.apresentarVouchersUsuario()
-
-        self.rvII_data_list.extend([{'labelII_titulo': dados[str(i)]["titulo"],
-                                   'labelII_descricao': dados[str(i)]["descricao"],
-                                   'labelII_nome_gato': dados[str(i)]["gato"],
-                                   'labelII_local': dados[str(i)]["local"],
-                                   'labelII_lanche': dados[str(i)]["lanche"],
-                                   'labelII_duracao': str(dados[str(i)]["duracao"])} for i in range(len(dados))])
-
-
-class VoucherSimples(BoxLayout):
-    pass
-
-class Login(Screen):
-    
-    def Clicou(self):
-        login = self.ids.OK.text
-        senha = self.ids.not_OK.text
-
-        if (login != '') and (senha != ''):
-            r = c.realizarLogin(login, senha)
-            self.VerificarLogin(r)
-            return True
-        else:
-            self.ids.Jovem.text = 'Preencha todos os campos!'
-            return False
-
-
-    def VerificarLogin(self, validado):
-        if validado:
-            self.parent.current = 'telamenu'
-        else:
-            self.ids.Jovem.text = 'Credenciais Inválidas.'
-
-
-class TelaVouchers(Screen):
-    def IrParaMenu(self):
-        self.parent.current = 'telamenu'
-
-    def PrintChildren(self):
-        print("AAAH: ", self.children[0].children[1])
-        pass
-
-class TelaMeusVouchers(Screen):
-    def IrParaMenu(self):
-        self.parent.current = 'telamenu'
-
-class Troca(BoxLayout): # Não suporta seleção do voucher na interface (não é clicavel)
-    pass
-
-class TelaTrocas(Screen):
-    def loadData():
-        print("A")
-        pass
-    def IrParaMenu(self):
-        self.parent.current = 'telamenu'
-
-class TelaCadastro(Screen):
-
-    def CadastrarVoucher(self):
-        titulo = self.ids.titulo.text
-        descricao = self.ids.descricao.text
-        gato = self.ids.gato.text
-        local = self.ids.local.text
-        lanche = self.ids.lanche.text
-        duracao = self.ids.duracao.text
-
-        if (titulo != '' and descricao != '' and gato != '' and local != '' and lanche != '' and duracao != ''):
-            c.cadastrarVoucher(titulo, descricao, gato, local, lanche, duracao)
-            self.parent.current = 'telamenu'
-        else:
-            self.ids.cad.text = 'Preencha todos os campos!'
-    
-    def IrParaMenu(self):
-        self.ids.cad.text = 'Cadastrar Voucher'
-        self.parent.current = 'telamenu'
-
-class TelaMenu(Screen):
-
-    def IrParaCadastro(self):
-        self.parent.current = 'telacadastro'
-
-    def IrParaMeusVouchers(self):
-        self.parent.current = 'telameusvouchers'
-
-    def IrParaVouchers(self):
-        self.parent.current = 'telavouchers'
-
-    def IrParaTrocas(self):
-        self.parent.current = 'telatrocas'
-
-    pass
-
-class TestesInApp(App):
-
-    def build(self):
-        Window.clearcolor = (1,1,1,1)
-        manager = ScreenManager()
-
-        manager.add_widget(Login(name='login'))
-        manager.add_widget(TelaMenu(name='telamenu'))
-        manager.add_widget(TelaCadastro(name='telacadastro'))
-        manager.add_widget(TelaMeusVouchers(name='telameusvouchers'))
-        manager.add_widget(TelaVouchers(name='telavouchers'))
-        manager.add_widget(TelaTrocas(name='telatrocas'))
-
-
-
-
-        return manager
-
-if __name__ == '__main__':
-    c = Cliente() # Variável "global" por falta de melhor forma
-    selecionado = False
-    principal = TestesInApp()
-    principal.run()
-
-
-'''
-https://stackoverflow.com/questions/40470992/too-many-indentation-levels-in-on-press-button
-https://stackoverflow.com/questions/56226448/how-to-get-the-instance-from-a-recycleview-with-viewclass-as-button
-'''
+c = Cliente() # Variável "global" por falta de melhor forma
